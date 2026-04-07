@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  fl_server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.fl_server
+    ports:
+      - "8080:8080"
+    networks:
+      - federated_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  bank_node_1:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.bank_node
+    environment:
+      - NODE_ID=1
+      - SERVER_ADDRESS=fl_server:8080
+    volumes:
+      - ./data/partitions/bank_node_1.csv:/app/data.csv:ro
+    depends_on:
+      - fl_server
+    networks:
+      - federated_network
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+
+  bank_node_2:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.bank_node
+    environment:
+      - NODE_ID=2
+      - SERVER_ADDRESS=fl_server:8080
+    volumes:
+      - ./data/partitions/bank_node_2.csv:/app/data.csv:ro
+    depends_on:
+      - fl_server
+    networks:
+      - federated_network
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+
+  bank_node_3:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.bank_node
+    environment:
+      - NODE_ID=3
+      - SERVER_ADDRESS=fl_server:8080
+    volumes:
+      - ./data/partitions/bank_node_3.csv:/app/data.csv:ro
+    depends_on:
+      - fl_server
+    networks:
+      - federated_network
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+
+  bank_node_4:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.bank_node
+    environment:
+      - NODE_ID=4
+      - SERVER_ADDRESS=fl_server:8080
+    volumes:
+      - ./data/partitions/bank_node_4.csv:/app/data.csv:ro
+    depends_on:
+      - fl_server
+    networks:
+      - federated_network
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+
+networks:
+  federated_network:
+    driver: bridge
