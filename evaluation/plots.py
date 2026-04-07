@@ -141,7 +141,14 @@ if __name__ == "__main__":
     # The try blocks prevent crashing if amlnet.csv isn't populated yet
     try:
         v.plot_class_imbalance()
-        v.plot_correlation_heatmap(['amount', 'is_laundering', 'timestamp']) 
+        v.plot_correlation_heatmap([
+            'amount', 
+            'oldbalanceOrg', 
+            'pagerank_sender', 
+            'in_degree_receiver', 
+            'betweenness_centrality_sender', 
+            'is_laundering'
+        ])
         v.plot_network_topology()
         v.plot_pca_3d_clusters()
     except Exception as e:
