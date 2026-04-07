@@ -1,0 +1,19 @@
+# Environments
+venv/
+__pycache__/
+*.pyc
+
+# Heavy Datasets (Never push ML data to Github!)
+data/*.csv
+
+# Serialized ML Objects
+data/*.pkl
+*.pkl
+
+# Images and plots (Optional, but usually ignored)
+images/
+visualizations/
+
+# Secrets
+.env
+.DS_Store
