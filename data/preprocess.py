@@ -132,6 +132,9 @@ def main():
     output_csv = os.path.join(base_dir, "processed_partition.csv")
     scaler_path = os.path.join(base_dir, "scaler.pkl")
     
+    # Shuffle the dataset so SMOTE's synthetic fraud rows are uniquely dispersed inside the matrix
+    processed_df = processed_df.sample(frac=1, random_state=42).reset_index(drop=True)
+    
     logging.info(f"Saving explicitly interpreted partitioned dataframe to {output_csv}...")
     processed_df.to_csv(output_csv, index=False)
     
