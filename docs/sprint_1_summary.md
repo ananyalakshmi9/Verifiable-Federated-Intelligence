@@ -19,9 +19,9 @@ This document summarizes the engineering architecture and codebase modifications
 - **The Imbalance Fix (`data/preprocess.py`)**: Tackled the most severe challenge of AML detection: the extreme >99% / <1% class imbalance (also called the 'Accuracy Paradox'). 
 - **SMOTE Interpolation**: Rather than haphazardly duplicating rows, we applied Synthetic Minority Over-sampling Technique (`SMOTE`) to mathematically synthesize new fraud typologies. We artificially padded the illicit behavior to encompass 30% of our matrix, allowing our future neural networks to cleanly recognize laundering patterns.
 
-### 5. zk-SNARK Dimensionality Confinement
-- **PCA Bottleneck**: Built a rigid mathematical choke-point utilizing Principal Component Analysis (`PCA`). Cryptographic Zero-Knowledge mathematical circuits have intense limits on dimensional complexity. Our `preprocess.py` pipeline forces the data into exactly **32 numeric columns**.
-- **State Preservation**: The `StandardScaler` variances and `PCA` eigenvector matrices are fully serialized to local storage via `joblib`. This ensures that when training occurs later, each distinct bank node applies identical transformations blindly.
+### 5. zk-SNARK Dimensionality Confinement & Model Interpretability
+- **Feature Preservation over PCA**: Cryptographic Zero-Knowledge mathematical circuits have intense limits on dimensional complexity (falling around ~30 dimensions). Rather than utilizing a "black-box" Principal Component Analysis (`PCA`) compression to reach this limit, we meticulously engineered our topological graphs to naturally produce **19 highly explicit, human-readable variables** (e.g., `amount`, `pagerank`, `in_degree`). This ensures absolute zero-knowledge compliance without sacrificing our ability to conduct Model Feature Interpretations.
+- **State Preservation**: The `StandardScaler` normalizations are fully serialized to local storage via `joblib`. This ensures that when federated training occurs later, each distinct bank node applies the exact identical standard transformations blindly.
 
 ### 6. Visual Data Analytics
 - Engineered robust visualization outputs mapping the network topologies, Spearman correlations, and class imbalances. All mathematical charts have been structurally routed to a single `visualizations/` directory to facilitate rapid panel grading and auditing.
