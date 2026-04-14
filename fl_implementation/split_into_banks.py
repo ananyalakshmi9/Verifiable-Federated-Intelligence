@@ -3,7 +3,10 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 
 # Load processed dataset
-df = pd.read_csv("processed_partition.csv")
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+data_path = os.path.join(current_dir, "..", "data", "processed_partition_best.csv")
+df = pd.read_csv(data_path)
 
 # Split into train and test
 train_df, test_df = train_test_split(

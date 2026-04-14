@@ -1,19 +1,23 @@
-# Environments
-venv/
-__pycache__/
-*.pyc
-
-# Heavy Datasets (Never push ML data to Github!)
+# Ignore massive datasets to prevent GitHub push rejections!
 data/*.csv
+*.csv
 
-# Serialized ML Objects
-data/*.pkl
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Models and joblib assets
+scaler.pkl
 *.pkl
+models/
+*.pt
+*.pth
 
-# Images and plots (Optional, but usually ignored)
-images/
-visualizations/
-
-# Secrets
+# Environment and IDE
 .env
-.DS_Store
+.venv
+env/
+venv/
+.idea/
+.vscode/

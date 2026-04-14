@@ -5,6 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from imblearn.over_sampling import SMOTE
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 import joblib
 import warnings
@@ -106,35 +108,60 @@ def main():
     X_scaled = scaler.fit_transform(X)
     
     # ---------------------------------------------------------
-    # 6. Data Pre-processing: SMOTE
+    # 6. Data Pre-processing: SMOTE Variations
     # ---------------------------------------------------------
-    logging.info("Applying SMOTE (Targeting 30% minority ratio)...")
-    target_minority_ratio = 30 / 70
-    smote = SMOTE(sampling_strategy=target_minority_ratio, k_neighbors=3, random_state=42)
-    X_resampled, y_resampled = smote.fit_resample(X_scaled, y)
+    ratios = {
+        "30_70": 30 / 70,
+        "40_60": 40 / 60,
+        "50_50": 50 / 50
+    }
     
-    # ---------------------------------------------------------
-    # 7. Data Visualization (AFTER)
-    # ---------------------------------------------------------
-    logging.info("Generating After-SMOTE visualization...")
-    plot_class_distribution(y_resampled, "Class Balance (After SMOTE)", os.path.join(viz_dir, "after_smote.png"))
+    best_ratio_name = "50_50" # Selecting 50:50 as the best dataset version for balanced representation
     
-    # ---------------------------------------------------------
-    # 8. Reconstruct Fully Interpretable DataFrame
-    # ---------------------------------------------------------
-    logging.info(f"Reconstructing DataFrame fully preserving {len(feature_names)} readable features...")
-    processed_df = pd.DataFrame(X_resampled, columns=feature_names)
-    processed_df['is_laundering'] = y_resampled
-    
-    # ---------------------------------------------------------
-    # 9. Storage
-    # ---------------------------------------------------------
-    output_csv = os.path.join(base_dir, "processed_partition.csv")
+    for ratio_name, target_ratio in ratios.items():
+        logging.info(f"Applying Hybrid Balancing (UnderSampler to 500k + SMOTE target {ratio_name.replace('_', ':')})...")
+        
+        # Step 1: Reduce legitimate transactions to firmly 500,000. Retain all laundering data.
+        current_minority_count = int(sum(y == 1))
+        under = RandomUnderSampler(sampling_strategy={0: 500000, 1: current_minority_count}, random_state=42)
+        
+        # Step 2: SMOTE the laundering transactions for the final leap to the target_ratio
+        over = SMOTE(sampling_strategy=target_ratio, k_neighbors=3, random_state=42)
+        
+        pipeline = Pipeline(steps=[('u', under), ('o', over)])
+        X_resampled, y_resampled = pipeline.fit_resample(X_scaled, y)
+        
+        # ---------------------------------------------------------
+        # 7. Data Visualization (AFTER)
+        # ---------------------------------------------------------
+        logging.info(f"Generating After-SMOTE visualization for {ratio_name}...")
+        plot_class_distribution(
+            y_resampled, 
+            f"Class Balance (After SMOTE {ratio_name.replace('_', ':')})", 
+            os.path.join(viz_dir, f"after_smote_{ratio_name}.png")
+        )
+        
+        # ---------------------------------------------------------
+        # 8. Reconstruct Fully Interpretable DataFrame
+        # ---------------------------------------------------------
+        logging.info(f"Reconstructing DataFrame preserving features for {ratio_name}...")
+        processed_df = pd.DataFrame(X_resampled, columns=feature_names)
+        processed_df['is_laundering'] = y_resampled
+        
+        # ---------------------------------------------------------
+        # 9. Storage
+        # ---------------------------------------------------------
+        output_csv = os.path.join(base_dir, f"processed_partition_{ratio_name}.csv")
+        logging.info(f"Saving {ratio_name} explicitly interpreted partitioned dataframe to {output_csv}...")
+        processed_df.to_csv(output_csv, index=False)
+        
+        # Identify the best dataset version and save it distinctly
+        if ratio_name == best_ratio_name:
+            best_output_csv = os.path.join(base_dir, "processed_partition_best.csv")
+            logging.info(f"Saving Best Dataset Version ({ratio_name}) to {best_output_csv}...")
+            processed_df.to_csv(best_output_csv, index=False)
+            
     scaler_path = os.path.join(base_dir, "scaler.pkl")
-    
-    logging.info(f"Saving explicitly interpreted partitioned dataframe to {output_csv}...")
-    processed_df.to_csv(output_csv, index=False)
-    
     logging.info("Saving Scaler object via joblib...")
     joblib.dump(scaler, scaler_path)
     # Notice: No PCA object saved!
