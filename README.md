@@ -2,13 +2,13 @@
 
 **A Privacy-Preserving Framework for Decentralized AML Detection via Structural Embeddings and zk-SNARKs**
 
-This framework pioneers a trustless environment where disjointed financial networks collaboratively train an Anti-Money Laundering (AML) schema without surrendering topological data autonomy. Every iteration transmitted is authenticated via zk-SNARKs (`Circom`) mathematically verified immutably on the Polygon Amoy Testnet.
+This framework pioneers a trustless environment where disjointed financial networks collaboratively train an Anti-Money Laundering (AML) schema without surrendering topological data autonomy. Every iteration transmitted is authenticated via zk-SNARKs mathematically verified immutably on the Polygon Amoy Testnet.
 
 ## 👥 Authors
-- A R Keerthana (Blockchain)
-- Ananya Lakshmi (FL Orchestration)
-- Kavan Reddy (Infrastructure)
-- Likith Kumar (ZKP Engineering)
+- A R Keerthana 
+- Ananya Lakshmi 
+- Kavan Reddy 
+- Likith Kumar 
 
 ## 🏛️ System Architecture
 

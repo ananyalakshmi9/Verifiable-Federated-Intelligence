@@ -5,7 +5,6 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import logging
-from sklearn.decomposition import PCA
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -33,7 +32,15 @@ class Visualizer:
         
     def plot_correlation_heatmap(self, features):
         logging.info("Generating Correlation Heatmap...")
-        df = pd.read_csv(self.data_path)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(current_dir)
+        part_path = os.path.join(project_root, "data", "processed_partition_best.csv")
+        
+        if not os.path.exists(part_path):
+            logging.warning(f"{part_path} not found! Cannot plot extended heatmap.")
+            return
+            
+        df = pd.read_csv(part_path)
         
         # Ensure we only correlate available numeric features
         existing_features = [f for f in features if f in df.columns]
@@ -51,8 +58,20 @@ class Visualizer:
         logging.info("Correlation heatmap saved.")
         
     def plot_network_topology(self, sample_size=200):
-        logging.info("Generating Network Topology Sub-Graph...")
-        df = pd.read_csv(self.data_path).head(sample_size)
+        logging.info("Generating Network Topology Sub-Graph (50-50 Split)...")
+        df_full = pd.read_csv(self.data_path)
+        
+        half_size = sample_size // 2
+        laundering = df_full[df_full['isMoneyLaundering'] == 1]
+        legitimate = df_full[df_full['isMoneyLaundering'] == 0]
+        
+        n_laundering = min(half_size, len(laundering))
+        n_legitimate = sample_size - n_laundering
+        
+        df = pd.concat([
+            laundering.sample(n=n_laundering, random_state=42),
+            legitimate.sample(n=n_legitimate, random_state=42)
+        ]).sample(frac=1, random_state=42)
         
         G = nx.from_pandas_edgelist(
             df, source='nameOrig', target='nameDest', 
@@ -97,52 +116,31 @@ class Visualizer:
         plt.close()
         logging.info("Convergence plot saved.")
         
-    def plot_pca_3d_clusters(self):
-        logging.info("Generating 3D PCA Cluster Projection...")
-        part_path = "data/processed_partition.csv"
-        if not os.path.exists(part_path):
-            logging.warning("processed_partition.csv not found! Run preprocess.py first.")
-            return
-            
-        df = pd.read_csv(part_path).head(5000) # Sampled for rendering speed
-        y = df['is_laundering']
-        X = df.drop('is_laundering', axis=1)
-        
-        pca_vis = PCA(n_components=3, random_state=42)
-        X_3d = pca_vis.fit_transform(X)
-        
-        fig = plt.figure(figsize=(10, 8))
-        ax = fig.add_subplot(111, projection='3d')
-        
-        ax.scatter(X_3d[y == 0, 0], X_3d[y == 0, 1], X_3d[y == 0, 2], 
-                   c='#3498db', marker='o', alpha=0.15, label='Legitimate')
-        
-        ax.scatter(X_3d[y == 1, 0], X_3d[y == 1, 1], X_3d[y == 1, 2], 
-                   c='#e74c3c', marker='x', alpha=1.0, s=80, label='Laundering')
-                   
-        ax.set_title("3D PCA Latent Space: Visualizing the SMOTE Manifold")
-        ax.set_xlabel("Principal Component 1")
-        ax.set_ylabel("Principal Component 2")
-        ax.set_zlabel("Principal Component 3")
-        
-        leg = ax.legend(loc='upper left')
-        for lh in leg.legend_handles: 
-            lh.set_alpha(1)
-            
-        plt.savefig(os.path.join(self.output_dir, "pca_3d_clusters.png"), dpi=300)
-        plt.close()
-        logging.info("3D PCA Cluster plot saved.")
 
 if __name__ == "__main__":
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(current_dir)
+    data_path = os.path.join(project_root, "data", "amlnet.csv")
+    output_dir = os.path.join(project_root, "visualizations")
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+        
     v = Visualizer(
-        data_path="data/amlnet.csv", 
-        output_dir="visualizations/"
+        data_path=data_path, 
+        output_dir=output_dir
     )
     # The try blocks prevent crashing if amlnet.csv isn't populated yet
     try:
         v.plot_class_imbalance()
-        v.plot_correlation_heatmap(['amount', 'is_laundering', 'timestamp']) 
+        
+        heatmap_vars = [
+            'amount', 'oldbalanceOrg', 'newbalanceOrig',
+            'pagerank_sender', 'in_degree_sender', 'out_degree_sender',
+            'clustering_coefficient_sender', 'betweenness_centrality_sender',
+            'is_laundering'
+        ]
+        v.plot_correlation_heatmap(heatmap_vars) 
+        
         v.plot_network_topology()
-        v.plot_pca_3d_clusters()
     except Exception as e:
         logging.error(f"Could not generate plots. Ensure data exists. {e}")
