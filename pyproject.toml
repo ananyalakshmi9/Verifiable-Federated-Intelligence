@@ -1,0 +1,26 @@
+[project]
+name = "capstone-aml-federated"
+version = "0.1.0"
+description = "Verifiable Federated Intelligence: A Privacy-Preserving Framework for Decentralized AML Detection"
+authors = [
+    {name = "A R Keerthana", email = "keerthana@example.com"},
+    {name = "Ananya Lakshmi", email = "ananya@example.com"},
+    {name = "Kavan Reddy", email = "kavan@example.com"},
+    {name = "Likith Kumar", email = "likith@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --maxfail=1 --disable-warnings"
+testpaths = [
+    "tests"
+]
+pythonpath = [
+    "."
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

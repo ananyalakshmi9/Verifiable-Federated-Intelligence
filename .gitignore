@@ -1,0 +1,23 @@
+# Ignore massive datasets to prevent GitHub push rejections!
+data/*.csv
+*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Models and joblib assets
+scaler.pkl
+*.pkl
+models/
+*.pt
+*.pth
+
+# Environment and IDE
+.env
+.venv
+env/
+venv/
+.idea/
+.vscode/
