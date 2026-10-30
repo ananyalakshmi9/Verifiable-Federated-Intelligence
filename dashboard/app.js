@@ -344,7 +344,7 @@ document.addEventListener("DOMContentLoaded", () => {
         csv += `${roundNum},"${hash}",${acc},${f1},${clients},"${ts}",${zk},Groth16/BN254\n`;
       });
     } else {
-      csv += "10,\"0x0d693f6d0a1ed07376c4ba9213e851288115a05ee5c11344dfe38481cf30ee14\",99.67,99.67,4,\"2026-07-28T14:27:31Z\",true,Groth16/BN254\n";
+      csv += "10,\"0x0d693f6d0a1ed07376c4ba9213e851288115a05ee5c11344dfe38481cf30ee14\",99.67,99.67,4,\"2026-10-30T14:58:15Z\",true,Groth16/BN254\n";
     }
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
