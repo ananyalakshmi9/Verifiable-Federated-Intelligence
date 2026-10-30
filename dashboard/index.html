@@ -393,50 +393,77 @@
                   <div style="background: var(--color-ivory-warm); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
                     <div class="metric-label">True Positive Rate (Recall)</div>
                     <div style="font-size: 22px; font-weight: 700; color: var(--status-success); margin: 4px 0;">99.86%</div>
-                    <div style="font-size: 11px; color: var(--color-charcoal-subtle);">Critical for detecting disguised illicit mule loops</div>
+                    <div style="font-size: 11px; color: var(--color-charcoal-subtle);">Disguised illicit mule loops detected</div>
                   </div>
 
                   <div style="background: var(--color-ivory-warm); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
                     <div class="metric-label">Precision Rate</div>
                     <div style="font-size: 22px; font-weight: 700; color: var(--color-forest); margin: 4px 0;">99.48%</div>
-                    <div style="font-size: 11px; color: var(--color-charcoal-subtle);">Minimizes false alerts on legitimate customer transfers</div>
+                    <div style="font-size: 11px; color: var(--color-charcoal-subtle);">False positive alert containment</div>
                   </div>
                 </div>
 
-                <div style="border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden;">
-                  <table class="data-table" style="font-size: 12px;">
+                <!-- 2x2 Confusion Matrix Visual Breakdown -->
+                <div>
+                  <div class="metric-label" style="margin-bottom: 6px;">Cumulative Confusion Matrix (Holdout Set)</div>
+                  <div class="matrix-container">
+                    <div class="matrix-cell tp">
+                      <span class="matrix-label">True Positives (TP)</span>
+                      <span class="matrix-num">1,529</span>
+                      <span class="matrix-sub">Illicit caught (99.86%)</span>
+                    </div>
+                    <div class="matrix-cell fp">
+                      <span class="matrix-label">False Positives (FP)</span>
+                      <span class="matrix-num">8</span>
+                      <span class="matrix-sub">Legitimate flagged (0.004%)</span>
+                    </div>
+                    <div class="matrix-cell fn">
+                      <span class="matrix-label">False Negatives (FN)</span>
+                      <span class="matrix-num">2</span>
+                      <span class="matrix-sub">Missed illicit (0.13%)</span>
+                    </div>
+                    <div class="matrix-cell tn">
+                      <span class="matrix-label">True Negatives (TN)</span>
+                      <span class="matrix-num">178,733</span>
+                      <span class="matrix-sub">Legitimate cleared (99.99%)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow-x: auto;">
+                  <table class="data-table" style="font-size: 11.5px; width: 100%;">
                     <thead>
                       <tr>
-                        <th>Metric Dimension</th>
-                        <th>Federated Value</th>
-                        <th>Baseline Centralized</th>
-                        <th>Variance</th>
+                        <th style="width: 32%;">Dimension</th>
+                        <th style="width: 22%;">Federated</th>
+                        <th style="width: 24%;">Centralized</th>
+                        <th style="width: 22%;">Variance</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td><strong>Model Accuracy</strong></td>
+                        <td><strong>Accuracy</strong></td>
                         <td>99.67%</td>
                         <td>99.68%</td>
-                        <td style="color: var(--status-success);">-0.01% (Parity)</td>
+                        <td style="color: var(--status-success); font-weight: 600;">-0.01% (Parity)</td>
                       </tr>
                       <tr>
                         <td><strong>F1 Score</strong></td>
                         <td>0.9967</td>
                         <td>0.9968</td>
-                        <td style="color: var(--status-success);">-0.0001 (Parity)</td>
+                        <td style="color: var(--status-success); font-weight: 600;">-0.0001 (Parity)</td>
                       </tr>
                       <tr>
-                        <td><strong>Feature Dimensions</strong></td>
-                        <td>32 (PCA reduced)</td>
-                        <td>32 (PCA reduced)</td>
+                        <td><strong>Features</strong></td>
+                        <td>32 (PCA)</td>
+                        <td>32 (PCA)</td>
                         <td style="color: var(--color-charcoal-subtle);">Exact match</td>
                       </tr>
                       <tr>
-                        <td><strong>Privacy Leakage</strong></td>
+                        <td><strong>Privacy</strong></td>
                         <td>0 PII Exposed</td>
-                        <td>Requires Central Pooling</td>
-                        <td style="color: var(--status-success); font-weight: 600;">Full Privacy</td>
+                        <td>Pooled Data</td>
+                        <td style="color: var(--status-success); font-weight: 600;">Guaranteed</td>
                       </tr>
                     </tbody>
                   </table>
@@ -609,7 +636,7 @@
         </section>
 
         <!-- ==============================================================
-             SECTION 7: INSTITUTION SETTINGS (RESTRICTED ENTERPRISE VIEW)
+             SECTION 7: INSTITUTION SETTINGS (ENTERPRISE OPERATIONAL VIEW)
              ============================================================== -->
         <section id="section-institution-settings" class="view-section" style="display: none;">
           <div class="view-header">
@@ -617,19 +644,98 @@
               <h1>Institution Profile & Node Settings</h1>
               <p>Hardware connectivity, RPC configurations, and consortium credentials.</p>
             </div>
+            <div class="view-controls">
+              <span class="badge badge-success">Cryptographically Bound</span>
+              <span class="badge badge-forest">Consortium Tier 1</span>
+            </div>
           </div>
 
-          <div class="card">
-            <div class="card-body">
-              <div class="restricted-notice">
-                <h3>Enterprise Configuration Locked</h3>
-                <p>Consortium node parameters are managed by your institution's infrastructure administrator. RPC endpoints, cryptographic key shares, and FL client port bindings are locked by compliance policy.</p>
-                <div style="margin-top: 14px;">
-                  <span class="badge badge-neutral">Node Identity: Bank Silo 1</span>
-                  <span class="badge badge-neutral">RPC URL: 127.0.0.1:8545</span>
-                  <span class="badge badge-neutral">Port: 8080</span>
+          <div class="grid-2">
+            <!-- Node Identity & Signing Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Node Identity & Key Governance</h3>
+                <span class="badge badge-neutral">Silo 1</span>
+              </div>
+              <div class="card-body" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">Participant Institution</span>
+                    <span class="config-desc">Designated Tier-1 Banking Consortium Member</span>
+                  </div>
+                  <span class="config-value">First National Bank</span>
+                </div>
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">Local Node Identifier</span>
+                    <span class="config-desc">Flower gRPC Client Identification Tag</span>
+                  </div>
+                  <span class="config-value">bank_silo_1</span>
+                </div>
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">ECDSA Signing Address</span>
+                    <span class="config-desc">Submits proof commitments to AMLVerifier.sol</span>
+                  </div>
+                  <span class="config-value">0xa4cd...4D72</span>
+                </div>
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">Zero-Knowledge Prover</span>
+                    <span class="config-desc">Groth16 Prover on Alt_bn128 Elliptic Curve</span>
+                  </div>
+                  <span class="config-value">SnarkJS / BN254</span>
                 </div>
               </div>
+            </div>
+
+            <!-- Network Endpoints & Defense Parameters -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Consortium Network & Defense Rules</h3>
+                <span class="badge badge-success">Strict Active</span>
+              </div>
+              <div class="card-body" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">Federated Aggregator</span>
+                    <span class="config-desc">Flower Coordination Protocol Port</span>
+                  </div>
+                  <span class="config-value">127.0.0.1:8080</span>
+                </div>
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">Blockchain JSON-RPC</span>
+                    <span class="config-desc">Hardhat Local Node & Polygon Amoy Gateway</span>
+                  </div>
+                  <span class="config-value">127.0.0.1:8545</span>
+                </div>
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">Byzantine L2 Norm Filter</span>
+                    <span class="config-desc">Max tolerable gradient norm prior to drop</span>
+                  </div>
+                  <span class="config-value">&lt; 150.0 Norm</span>
+                </div>
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">Differential Privacy ε</span>
+                    <span class="config-desc">Strict Renyi Moments Accountant Bound</span>
+                  </div>
+                  <span class="config-value">ε = 3.84, δ = 10⁻⁵</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Enterprise Compliance Policy Banner -->
+          <div class="card" style="margin-top: 20px;">
+            <div class="card-body" style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+              <div>
+                <h4 style="font-size: 13.5px; font-weight: 700; color: var(--color-charcoal); margin-bottom: 4px;">Institutional Compliance Lock Active</h4>
+                <p style="font-size: 12px; color: var(--color-charcoal-subtle);">Parameters are cryptographically locked across all 4 participant banks by multi-institution consortium policy. Altering clipping thresholds or RPC endpoints requires multi-signature re-attestation.</p>
+              </div>
+              <span class="badge badge-forest" style="padding: 6px 12px; font-size: 12px;">Policy Confirmed</span>
             </div>
           </div>
         </section>

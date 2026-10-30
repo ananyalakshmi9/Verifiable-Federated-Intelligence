@@ -361,7 +361,7 @@
                 <div>
                   <div class="metric-label" style="margin-bottom: 4px;">Public Signal [0] — Global Poseidon Hash Commitment</div>
                   <div class="mono" id="proof-signal-0" style="word-break: break-all; background: var(--color-ivory-warm); padding: 8px 10px; border-radius: 4px; border: 1px solid var(--color-border); font-size: 11px;">
-                    5483662313036383762789179596062672636215873836517063566452367034809247326820
+                    15368229343815760246299309526203879416769585689037092971013772490199510644048
                   </div>
                 </div>
 
@@ -392,28 +392,71 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Mathematical Circuit Constraints</h3>
+                <span class="badge badge-success">3 Invariants Active</span>
               </div>
               <div class="card-body">
-                <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; font-size: 12.5px;">
+                <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px; font-size: 12.5px;">
                   <li style="display: flex; gap: 10px;">
                     <span class="badge badge-success" style="height: fit-content;">ENFORCED</span>
                     <div>
-                      <strong>Sample-Weighted Aggregation:</strong> Enforces $\sum (s_i \cdot w_i) = S_{tot} \cdot W_{glob}$ over all 33 network parameters in layer 4.
+                      <strong>Sample-Weighted Aggregation:</strong> Enforces <span class="math-formula">∑ (sᵢ · wᵢ) = S_tot · W_glob</span> over all 33 network parameters in layer 4.
                     </div>
                   </li>
                   <li style="display: flex; gap: 10px;">
                     <span class="badge badge-success" style="height: fit-content;">ENFORCED</span>
                     <div>
-                      <strong>BN254 Pairing Validity:</strong> Cryptographic verification validates $e(A, B) = e(\alpha, \beta) \cdot e(x, \gamma) \cdot e(C, \delta)$ with zero knowledge of local weights.
+                      <strong>BN254 Pairing Validity:</strong> Cryptographic verification validates <span class="math-formula">e(A, B) = e(α, β) · e(x, γ) · e(C, δ)</span> with zero knowledge of local weights.
                     </div>
                   </li>
                   <li style="display: flex; gap: 10px;">
                     <span class="badge badge-success" style="height: fit-content;">ENFORCED</span>
                     <div>
-                      <strong>On-Chain EVM Contract Check:</strong> Reverts automatically on-chain if proof coordinates or public signals are altered or replayed.
+                      <strong>On-Chain EVM Contract Check:</strong> Reverts automatically on-chain via precompile <span class="math-formula">0x08</span> if proof coordinates or public signals are altered or replayed.
                     </div>
                   </li>
                 </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Elliptic Curve Coordinates Inspector Card -->
+          <div class="card" style="margin-top: 20px;">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Groth16 Curve Points Inspector (Alt_bn128)</h3>
+                <p class="card-subtitle">Zero-knowledge proof coordinates verified by Ethereum precompile 0x08</p>
+              </div>
+              <span class="badge badge-forest">BN254 Pairing Check</span>
+            </div>
+            <div class="card-body">
+              <div class="grid-3">
+                <div class="curve-point-box">
+                  <div class="curve-point-label">
+                    <span>Point A (G1 Group)</span>
+                    <span style="color: var(--color-charcoal-subtle);">2 Coordinates</span>
+                  </div>
+                  <div id="proof-coord-a" class="mono" style="font-size: 10.5px; word-break: break-all;">
+                    ["123179...28511", "202016...41373", "1"]
+                  </div>
+                </div>
+                <div class="curve-point-box">
+                  <div class="curve-point-label">
+                    <span>Point B (G2 Group)</span>
+                    <span style="color: var(--color-charcoal-subtle);">4 Coordinates (2x2)</span>
+                  </div>
+                  <div id="proof-coord-b" class="mono" style="font-size: 10.5px; word-break: break-all;">
+                    [["200043...15712", "130406...20531"], ["315257...00933", "172192...81894"]]
+                  </div>
+                </div>
+                <div class="curve-point-box">
+                  <div class="curve-point-label">
+                    <span>Point C (G1 Group)</span>
+                    <span style="color: var(--color-charcoal-subtle);">2 Coordinates</span>
+                  </div>
+                  <div id="proof-coord-c" class="mono" style="font-size: 10.5px; word-break: break-all;">
+                    ["938379...44158", "184044...56951", "1"]
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -492,16 +535,84 @@
               <h1>Examiner Reports & Governance</h1>
               <p>Official supervisory attestations and cryptographic compliance certifications.</p>
             </div>
+            <div class="view-controls">
+              <button class="btn btn-primary" id="btn-export-csv" onclick="exportAuditLedgerCSV()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export Audit Certification (CSV)
+              </button>
+            </div>
           </div>
 
           <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Consortium Compliance Certification Matrix</h3>
+                <p class="card-subtitle">Formal supervisory attestations for AML model convergence and privacy preservation</p>
+              </div>
+              <span class="badge badge-success">Audit Complete (10 Rounds)</span>
+            </div>
             <div class="card-body">
-              <div class="restricted-notice">
-                <h3>Regulatory Attestation Available</h3>
-                <p>The consortium model has attained verified convergence across all 4 supervised financial institutions with zero reported privacy violations and an immutable audit trail confirmed on-chain.</p>
-                <div style="margin-top: 14px;">
-                  <button class="btn btn-secondary btn-sm" onclick="alert('Exporting verified regulatory audit summary (JSON/CSV) from live blockchain state...')">Export Audit Certification (CSV)</button>
-                </div>
+              <div class="table-container">
+                <table class="data-table" id="examiner-reports-table">
+                  <thead>
+                    <tr>
+                      <th>Round</th>
+                      <th>Model Weights Hash</th>
+                      <th>Convergence (F1)</th>
+                      <th>Privacy (ε)</th>
+                      <th>Zero Knowledge</th>
+                      <th>Attestation Status</th>
+                      <th>Supervisory Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="mono"><strong>Round 10</strong></td>
+                      <td class="mono">0x0d693f6d0a1ed073...</td>
+                      <td><span class="badge badge-forest">99.67%</span></td>
+                      <td>ε = 3.84</td>
+                      <td><span class="badge badge-success">Groth16 Valid</span></td>
+                      <td><span class="badge badge-success">Certified</span></td>
+                      <td style="color: var(--color-charcoal-subtle);">Production Approved</td>
+                    </tr>
+                    <tr>
+                      <td class="mono"><strong>Round 9</strong></td>
+                      <td class="mono">0x116dbf74167900ce...</td>
+                      <td><span class="badge badge-neutral">27.59%</span></td>
+                      <td>ε = 3.45</td>
+                      <td><span class="badge badge-success">Groth16 Valid</span></td>
+                      <td><span class="badge badge-success">Certified</span></td>
+                      <td style="color: var(--color-charcoal-subtle);">Training Logged</td>
+                    </tr>
+                    <tr>
+                      <td class="mono"><strong>Round 8</strong></td>
+                      <td class="mono">0x2adcbceb4c6a9973...</td>
+                      <td><span class="badge badge-neutral">27.59%</span></td>
+                      <td>ε = 3.07</td>
+                      <td><span class="badge badge-success">Groth16 Valid</span></td>
+                      <td><span class="badge badge-success">Certified</span></td>
+                      <td style="color: var(--color-charcoal-subtle);">Training Logged</td>
+                    </tr>
+                    <tr>
+                      <td class="mono"><strong>Round 7</strong></td>
+                      <td class="mono">0x8899b8acd7d57fa3...</td>
+                      <td><span class="badge badge-neutral">28.57%</span></td>
+                      <td>ε = 2.69</td>
+                      <td><span class="badge badge-success">Groth16 Valid</span></td>
+                      <td><span class="badge badge-success">Certified</span></td>
+                      <td style="color: var(--color-charcoal-subtle);">Training Logged</td>
+                    </tr>
+                    <tr>
+                      <td class="mono"><strong>Round 6</strong></td>
+                      <td class="mono">0x63b6d771552ea9dc...</td>
+                      <td><span class="badge badge-neutral">21.43%</span></td>
+                      <td>ε = 2.30</td>
+                      <td><span class="badge badge-success">Groth16 Valid</span></td>
+                      <td><span class="badge badge-success">Certified</span></td>
+                      <td style="color: var(--color-charcoal-subtle);">Training Logged</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -516,13 +627,83 @@
               <h1>Regulatory Authority Settings</h1>
               <p>Smart contract registry parameters and RPC oversight configurations.</p>
             </div>
+            <div class="view-controls">
+              <span class="badge badge-success">Multisig Governance Active</span>
+            </div>
           </div>
 
-          <div class="card">
-            <div class="card-body">
-              <div class="restricted-notice">
-                <h3>Oversight Configuration Active</h3>
-                <p>Consortium smart contract parameters are secured by multisignature governance. Contract address <code>0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512</code> is actively monitored via JSON-RPC.</p>
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Registry Architecture & Smart Contracts</h3>
+                <span class="badge badge-forest">Polygon Amoy & Local</span>
+              </div>
+              <div class="card-body" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">AMLVerifier Contract</span>
+                    <span class="config-desc">Audit verification target contract address</span>
+                  </div>
+                  <span class="config-value">0xe7f1...0512</span>
+                </div>
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">Groth16 Pairing Precompile</span>
+                    <span class="config-desc">EVM pairing check address (EIP-197)</span>
+                  </div>
+                  <span class="config-value">0x08</span>
+                </div>
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">Supervisory Authority Identity</span>
+                    <span class="config-desc">Cryptographic authority oversight address</span>
+                  </div>
+                  <span class="config-value">0xa4cd...4D72</span>
+                </div>
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">ZK Elliptic Curve Target</span>
+                    <span class="config-desc">Alt_bn128 (BN254) pairing-friendly curve</span>
+                  </div>
+                  <span class="config-value">254-bit BN254</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Consortium Quorum & SLA Policy</h3>
+                <span class="badge badge-success">4 / 4 Nodes Enforced</span>
+              </div>
+              <div class="card-body" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">Consensus Quorum</span>
+                    <span class="config-desc">Minimum participating bank silos per round</span>
+                  </div>
+                  <span class="config-value">100% Quorum (4/4)</span>
+                </div>
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">Local JSON-RPC RPC Port</span>
+                    <span class="config-desc">Hardhat local EVM development node</span>
+                  </div>
+                  <span class="config-value">127.0.0.1:8545</span>
+                </div>
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">Replay Attack Protection</span>
+                    <span class="config-desc">Enforced on-chain via round mapping guard</span>
+                  </div>
+                  <span class="config-value">Active (Reverts duplicate)</span>
+                </div>
+                <div class="config-item">
+                  <div class="config-label-group">
+                    <span class="config-title">Telemetry Sync Frequency</span>
+                    <span class="config-desc">Automated polling interval across consortium</span>
+                  </div>
+                  <span class="config-value">10 Seconds Polling</span>
+                </div>
               </div>
             </div>
           </div>
