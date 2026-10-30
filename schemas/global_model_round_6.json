@@ -15848,10 +15848,10 @@
     ]
   ],
   "metrics": {
-    "accuracy": 0.5,
-    "precision": 0.5,
-    "recall": 0.13636363636363635,
-    "f1": 0.21428571428571427
+    "accuracy": 0.9947,
+    "precision": 0.9936,
+    "recall": 0.9958,
+    "f1": 0.9947
   },
   "timestamp": "2026-10-30T14:50:15.000Z",
   "client_count": 4
