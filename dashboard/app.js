@@ -87,58 +87,79 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
   // Financial Institution Workspace Sync
   // --------------------------------------------------------------------------
   async function syncInstitutionView() {
-    // 1. Fetch Rounds
-    const rounds = await fetchJson("/api/rounds");
-    if (rounds && Array.isArray(rounds) && rounds.length > 0) {
-      cachedRounds = rounds;
-      renderKPIs(rounds);
-      renderOverviewRounds(rounds);
-      renderFLRounds(rounds);
+    try {
+      // 1. Fetch Rounds
+      const rounds = await fetchJson("/api/rounds");
+      if (rounds && Array.isArray(rounds) && rounds.length > 0) {
+        cachedRounds = rounds;
+        renderKPIs(rounds);
+        renderOverviewRounds(rounds);
+        renderFLRounds(rounds);
+      }
+    } catch (e) {
+      console.error("Error in syncInstitutionView rounds:", e);
     }
 
-    // 2. Fetch Blockchain Status
-    const bcStatus = await fetchJson("/api/blockchain/status");
-    if (bcStatus) {
-      const dot = document.getElementById("rpc-status-dot");
-      const text = document.getElementById("rpc-status-text");
-      if (text) {
-        text.innerText = bcStatus.rpcActive ? "RPC Node Online" : "RPC Offline (Local Fallback)";
+    try {
+      // 2. Fetch Blockchain Status
+      const bcStatus = await fetchJson("/api/blockchain/status");
+      if (bcStatus) {
+        const dot = document.getElementById("rpc-status-dot");
+        const text = document.getElementById("rpc-status-text");
+        if (text) {
+          text.innerText = bcStatus.rpcActive ? "RPC Node Online" : "RPC Offline (Local Fallback)";
+        }
+        if (dot) {
+          dot.style.backgroundColor = bcStatus.rpcActive ? "var(--status-success)" : "var(--status-warning)";
+        }
       }
-      if (dot) {
-        dot.style.backgroundColor = bcStatus.rpcActive ? "var(--status-success)" : "var(--status-warning)";
-      }
+    } catch (e) {
+      console.error("Error in syncInstitutionView blockchain status:", e);
     }
 
-    // 3. Fetch Pipeline Status
-    const status = await fetchJson("/api/status");
-    if (status) {
-      const badge = document.getElementById("pipeline-status-badge");
-      const desc = document.getElementById("pipeline-task-desc");
-      const logs = document.getElementById("console-logs");
-      if (badge) {
-        badge.innerText = status.status.toUpperCase();
-        badge.className = `badge badge-${status.status === "running" ? "warning" : status.status === "success" ? "success" : "neutral"}`;
+    try {
+      // 3. Fetch Pipeline Status
+      const status = await fetchJson("/api/status");
+      if (status) {
+        const badge = document.getElementById("pipeline-status-badge");
+        const desc = document.getElementById("pipeline-task-desc");
+        const logs = document.getElementById("console-logs");
+        if (badge) {
+          badge.innerText = status.status ? status.status.toUpperCase() : "IDLE";
+          badge.className = `badge badge-${status.status === "running" ? "warning" : status.status === "success" ? "success" : "neutral"}`;
+        }
+        if (desc && status.step) desc.innerText = status.step;
+        if (logs && status.logs && status.logs.length > 0) {
+          logs.innerHTML = status.logs.map(l => `<div class="terminal-line">${escapeHtml(l)}</div>`).join("");
+          logs.scrollTop = logs.scrollHeight;
+        }
       }
-      if (desc && status.step) desc.innerText = status.step;
-      if (logs && status.logs && status.logs.length > 0) {
-        logs.innerHTML = status.logs.map(l => `<div class="terminal-line">${escapeHtml(l)}</div>`).join("");
-        logs.scrollTop = logs.scrollHeight;
-      }
+    } catch (e) {
+      console.error("Error in syncInstitutionView status:", e);
     }
 
-    // 4. Fetch Security & Byzantine Events
-    const sec = await fetchJson("/api/security");
-    if (sec && sec.rejectedAnomalies) {
-      renderSecurityTable(sec.rejectedAnomalies);
+    try {
+      // 4. Fetch Security & Byzantine Events
+      const sec = await fetchJson("/api/security");
+      if (sec && sec.rejectedAnomalies) {
+        renderSecurityTable(sec.rejectedAnomalies);
+      }
+    } catch (e) {
+      console.error("Error in syncInstitutionView security:", e);
     }
 
-    // 5. Fetch Ledger Records
-    const ledgerData = await fetchJson("/api/blockchain");
-    if (ledgerData && ledgerData.rounds) {
-      renderInstitutionLedger(ledgerData.rounds, ledgerData.address);
+    try {
+      // 5. Fetch Ledger Records
+      const ledgerData = await fetchJson("/api/blockchain");
+      if (ledgerData && ledgerData.rounds) {
+        renderInstitutionLedger(ledgerData.rounds, ledgerData.address);
+      }
+    } catch (e) {
+      console.error("Error in syncInstitutionView ledger:", e);
     }
 
     const lastSync = document.getElementById("last-sync-time");
@@ -146,6 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderKPIs(rounds) {
+    if (!rounds || !rounds.length) return;
     const latest = rounds[rounds.length - 1];
     const m = latest.metrics || {};
     
@@ -154,9 +176,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const kpiRecall = document.getElementById("kpi-recall");
     const sidebarBadge = document.getElementById("sidebar-rounds-badge");
 
-    if (kpiRound) kpiRound.innerText = `Round ${latest.round}`;
-    if (kpiF1) kpiF1.innerText = `${((m.f1 || 0.9967) * 100).toFixed(2)}%`;
-    if (kpiRecall) kpiRecall.innerText = `${((m.recall || 0.9986) * 100).toFixed(2)}% Recall`;
+    const f1Value = typeof m.f1 === "number" ? m.f1 : 0.9967;
+    const recallValue = typeof m.recall === "number" ? m.recall : 0.9986;
+
+    if (kpiRound) kpiRound.innerText = `Round ${latest.round || rounds.length}`;
+    if (kpiF1) kpiF1.innerText = `${(f1Value * 100).toFixed(2)}%`;
+    if (kpiRecall) kpiRecall.innerText = `${(recallValue * 100).toFixed(2)}% Recall`;
     if (sidebarBadge) sidebarBadge.innerText = `${rounds.length} Rounds`;
   }
 
