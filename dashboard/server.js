@@ -283,6 +283,17 @@ app.get("/api/blockchain", async (req, res) => {
     if (!fs.existsSync(artifactPath)) throw new Error("No artifacts found");
     const artifact = JSON.parse(fs.readFileSync(artifactPath, "utf8"));
     const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545", undefined, { staticNetwork: true });
+    const code = await provider.getCode(deployedAddresses.AMLVerifier);
+    if (!code || code === "0x") {
+      return res.json({
+        address: deployedAddresses.AMLVerifier || "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+        owner: deployedAddresses.deployer || "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        rpcActive: true,
+        notice: "Node active, contracts pending deployment. Run: cd blockchain && npx hardhat run scripts/deploy.js --network localhost",
+        rounds: rounds
+      });
+    }
+
     const contract = new ethers.Contract(deployedAddresses.AMLVerifier, artifact.abi, provider);
     const roundNumbers = await contract.getRoundNumbers();
 
