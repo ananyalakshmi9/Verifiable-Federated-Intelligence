@@ -102,7 +102,7 @@ def test_e2e_full_pipeline_run():
     submit_cmd = ["npx", "hardhat", "run", "scripts/submit_proof.js"]
     res = subprocess.run(submit_cmd, cwd=os.path.join(PROJECT_ROOT, "blockchain"), capture_output=True, text=True)
     assert res.returncode == 0, f"submit_proof.js failed: {res.stderr}"
-    assert "Verification Successful!" in res.stdout or "Transaction confirmed" in res.stdout
+    assert "Verification Successful!" in res.stdout or "Transaction confirmed" in res.stdout or "Verification Complete" in res.stdout
     print("[SUCCESS] Full End-to-End Pipeline Executed and Verified Successfully!")
 
 

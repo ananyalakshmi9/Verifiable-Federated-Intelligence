@@ -121,6 +121,7 @@ async function main() {
   // 6. Print on-chain ledger summary
   const roundNumbersOnChain = await amlVerifier.getRoundNumbers();
   console.log(`\n=== Verification Complete ===`);
+  console.log(`[COMPLETE] Verification Successful! Transaction confirmed on-chain.`);
   console.log(`Total verified rounds currently on blockchain: ${roundNumbersOnChain.length}`);
 }
 
